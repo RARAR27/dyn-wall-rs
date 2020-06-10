@@ -43,9 +43,6 @@ jobs:
       - name: Build
         run: cargo build --release
         
-      - name: Make directory for assets
-        run: mkdir assets
-        
       - name: Copy binary over
         run: cp target/release/dyn-wall-rs .
         
@@ -55,22 +52,29 @@ jobs:
       - name: Find sha265sum
         run: sha256sum dyn-wall-rs-linux.tar.gz > assets/dyn-wall-rs-linux.sha256
         
-      - name: Move tarball to assets dir
-        run: mv dyn-wall-rs-linux.tar.gz assets/
-        
-      - name: Send tarball and sha256 back
-        uses: actions/upload-artifact@v1
-        with:
-          name: assets-linux
-          path: assets/
+      - name: Upload Linux zip
+        id: upload-linux-zip 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
-      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
-          files: |
-            dyn-wall-rs-linux.tar.gz
-            dyn-wall-rs-linux.sha256
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: dyn-wall-rs-linux.tar.gz
+          asset_name: dyn-wall-rs-linux.tar.gz
+          asset_content_type: application/zip
+
+      - name: Upload Linux sha256
+        id: upload-linux-sha256
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: dyn-wall-rs-linux.sha256
+          asset_name: dyn-wall-rs-linux.sha256
+          asset_content_type: application/zip
             
   release-windows:
     needs: test
@@ -98,10 +102,37 @@ jobs:
       - name: Find sha265sum
         run: Get-FileHash dyn-wall-rs-windows.zip -Algorithm SHA256 | Format-List > dyn-wall-rs-windows.sha256
         
-      - uses: "marvinpinto/action-automatic-releases@latest"
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: false
           prerelease: false
-          files: |
-            dyn-wall-rs-windows.zip  
-            dyn-wall-rs-windows.sha256
+          
+      - name: Upload Windows zip
+        id: upload-windows-zip 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: dyn-wall-rs-windows.zip
+          asset_name: dyn-wall-rs-windows.zip
+          asset_content_type: application/zip
+  
+      - name: Upload Windows sha256
+        id: upload-windows-sha256
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: dyn-wall-rs-windows.sha256
+          asset_name: dyn-wall-rs-windows.sha256
+          asset_content_type: application/zip
