@@ -121,7 +121,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
         with:
-          upload_url: ${{ release-linux.steps.create_release.outputs.upload_url }} 
+          upload_url: https://github.com/RARAR27/dyn-wall-rs/releases/tag/${{ github.ref }} 
           asset_path: dyn-wall-rs-windows.zip
           asset_name: dyn-wall-rs-windows.zip
           asset_content_type: application/zip
