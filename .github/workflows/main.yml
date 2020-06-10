@@ -115,7 +115,7 @@ jobs:
         
       - name: Get the version
         id: get_version
-        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+        run: shell:bash echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
         
       - uses: AButler/upload-release-assets@v2.0
         with:
