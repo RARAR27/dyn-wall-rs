@@ -19,6 +19,7 @@ jobs:
           ~/.cargo/registry
           ~/.cargo/git
           target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           
     - uses: actions/checkout@v2
     - name: Run tests
@@ -37,7 +38,7 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             target
-          key: ${{ runner.os }}-rust-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           
       - name: Build
         run: cargo build --release
@@ -84,7 +85,7 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             target
-          key: ${{ runner.os }}-rust-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - name: Build
         run: cargo build --release
         
