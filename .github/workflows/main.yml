@@ -59,7 +59,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          release_name: ${{ github.ref }}
           draft: false
           prerelease: false
         
@@ -113,30 +113,8 @@ jobs:
       - name: Find sha265sum
         run: Get-FileHash dyn-wall-rs-windows.zip -Algorithm SHA256 | Format-List > dyn-wall-rs-windows.sha256
         
-      - name: Get upload url
-        uses: bruceadams/get-release@v1.2.0
-        id: upload
-        
-      - name: Upload Windows zip
-        id: upload-windows-zip 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+      - uses: AButler/upload-release-assets@v2.0
         with:
-          upload_url: ${{ steps.upload.upload_url }}
-          asset_path: dyn-wall-rs-windows.zip
-          asset_name: dyn-wall-rs-windows.zip
-          asset_content_type: application/zip
-  
-      - name: Upload Windows sha256
-        id: upload-windows-sha256
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-        with:
-          upload_url: ${{ steps.upload.upload_url }}
-          asset_path: dyn-wall-rs-windows.sha256
-          asset_name: dyn-wall-rs-windows.sha256
-          asset_content_type: application/zip
+          files: 'dyn-wall-rs-windows.zip;dyn-wall-rs-windows.sha256'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          release-tag: ${{ github.ref }}
