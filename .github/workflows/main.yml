@@ -107,6 +107,7 @@ jobs:
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
@@ -120,7 +121,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          upload_url: ${{ release-linux.steps.create_release.outputs.upload_url }} 
           asset_path: dyn-wall-rs-windows.zip
           asset_name: dyn-wall-rs-windows.zip
           asset_content_type: application/zip
@@ -132,7 +133,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          upload_url: ${{ release-linux.steps.create_release.outputs.upload_url }} 
           asset_path: dyn-wall-rs-windows.sha256
           asset_name: dyn-wall-rs-windows.sha256
           asset_content_type: application/zip
