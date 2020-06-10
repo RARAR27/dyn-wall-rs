@@ -1,6 +1,9 @@
 name: Test and build dyn-wall-rs for Linux and Windows
 
-on: push
+on:
+  push:
+    tags:
+      - "v*"
 
 jobs:
   test:
@@ -60,6 +63,14 @@ jobs:
         with:
           name: assets-linux
           path: assets/
+      
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
+            dyn-wall-rs-linux.tar.gz
+            dyn-wall-rs-linux.sha256
 
   release-windows:
     needs: test
@@ -79,9 +90,6 @@ jobs:
       - name: Build
         run: cargo build --release
         
-      - name: Make directory for assets
-        run: mkdir assets
-        
       - name: Copy .exe over
         run: Copy-Item -Path target\release\dyn-wall-rs.exe
         
@@ -89,13 +97,12 @@ jobs:
         run: tar.exe -a -cf dyn-wall-rs-windows.zip dyn-wall-rs.exe
 
       - name: Find sha265sum
-        run: Get-FileHash dyn-wall-rs-windows.zip -Algorithm SHA256 | Format-List > assets\dyn-wall-rs-windows.sha256
+        run: Get-FileHash dyn-wall-rs-windows.zip -Algorithm SHA256 | Format-List > dyn-wall-rs-windows.sha256
         
-      - name: Move zip to assets dir
-        run: Move-Item -Path dyn-wall-rs-windows.zip -Destination assets\
-        
-      - name: Send zip back
-        uses: actions/upload-artifact@v1
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          name: assets-windows
-          path: assets\
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
+            dyn-wall-rs-windows.zip
+            dyn-wall-rs-windows.sha256
