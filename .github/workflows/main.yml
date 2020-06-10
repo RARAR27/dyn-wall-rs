@@ -114,7 +114,7 @@ jobs:
         run: Get-FileHash dyn-wall-rs-windows.zip -Algorithm SHA256 | Format-List > dyn-wall-rs-windows.sha256
         
       - name: Get upload url
-        uses: bruceadams/get-release@v1
+        uses: bruceadams/get-release@v1.2.0
         id: upload
         
       - name: Upload Windows zip
