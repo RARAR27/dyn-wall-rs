@@ -112,18 +112,6 @@ jobs:
         
       - name: Find sha265sum
         run: Get-FileHash dyn-wall-rs-windows.zip -Algorithm SHA256 | Format-List > dyn-wall-rs-windows.sha256
-        
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          draft: false
-          prerelease: false
           
       - name: Upload Windows zip
         id: upload-windows-zip 
