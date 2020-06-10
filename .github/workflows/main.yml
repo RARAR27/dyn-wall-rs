@@ -52,6 +52,17 @@ jobs:
       - name: Find sha265sum
         run: sha256sum dyn-wall-rs-linux.tar.gz > dyn-wall-rs-linux.sha256
         
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+        
       - name: Upload Linux zip
         id: upload-linux-zip 
         uses: actions/upload-release-asset@v1
