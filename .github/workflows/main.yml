@@ -112,7 +112,11 @@ jobs:
         
       - name: Find sha265sum
         run: Get-FileHash dyn-wall-rs-windows.zip -Algorithm SHA256 | Format-List > dyn-wall-rs-windows.sha256
-          
+        
+      - name: Get upload url
+        uses: bruceadams/get-release@v1
+        id: upload
+        
       - name: Upload Windows zip
         id: upload-windows-zip 
         uses: actions/upload-release-asset@v1
@@ -120,7 +124,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
         with:
-          upload_url: https://github.com/RARAR27/dyn-wall-rs/releases/tag/${{ github.ref }}
+          upload_url: ${{ upload.upload_url }}
           asset_path: dyn-wall-rs-windows.zip
           asset_name: dyn-wall-rs-windows.zip
           asset_content_type: application/zip
@@ -132,7 +136,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
         with:
-          upload_url: https://github.com/RARAR27/dyn-wall-rs/releases/tag/${{ github.ref }}
+          upload_url: ${{ upload.upload_url }}
           asset_path: dyn-wall-rs-windows.sha256
           asset_name: dyn-wall-rs-windows.sha256
           asset_content_type: application/zip
