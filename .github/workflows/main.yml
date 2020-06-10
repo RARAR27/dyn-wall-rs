@@ -113,7 +113,12 @@ jobs:
       - name: Find sha265sum
         run: Get-FileHash dyn-wall-rs-windows.zip -Algorithm SHA256 | Format-List > dyn-wall-rs-windows.sha256
         
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        
       - uses: AButler/upload-release-assets@v2.0
         with:
           files: 'dyn-wall-rs-windows.zip;dyn-wall-rs-windows.sha256'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+          release-tag: ${{ steps.get_version.outputs.VERSION }}
